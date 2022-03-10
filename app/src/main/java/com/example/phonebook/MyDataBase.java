@@ -21,10 +21,9 @@ public class MyDataBase extends SQLiteOpenHelper {
     private Context context;
     private static  final String CREATE_TABLE = "create table "+ TABLE_NAME +" ("+ ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "+F_NAME+" VARCHAR(20), "+L_NAME+" VARCHAR(15), "+ EMAIL +" TEXT DEFAULT '', "+ PHONE_NO +" VARCHAR(20));";
     private static  final String UPDATE_TABLE = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN Favourite BOOLEAN DEFAULT 'FALSE';";
-    String ema = "partho@gmail.com";
-    String insert = "insert into "+ TABLE_NAME +" ("+ F_NAME +", "+ L_NAME +", "+ EMAIL +", "+ PHONE_NO +") VALUES( 'Partho', 'Debnath', '"+ ema +"', '015555555');";
+
     String dele = "DROP TABLE Contactlist";
-    String fetch = "select * from " + TABLE_NAME +" ORDER BY "+F_NAME+" ASC ;";
+    String fetch_query = "select * from " + TABLE_NAME +" ORDER BY "+F_NAME+" ASC ;";
 
     // https://www.youtube.com/watch?v=WRrB7WUj4zQ&list=PLgH5QX0i9K3p9xzYLFGdfYliIRBLVDRV5&index=126
 
@@ -48,7 +47,7 @@ public class MyDataBase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1){
         try{
             Toast.makeText(context, "On Upgrade is called", Toast.LENGTH_SHORT).show(); //...........
-            sqLiteDatabase.execSQL(insert);
+            sqLiteDatabase.execSQL(UPDATE_TABLE);
 
         }
         catch (Exception e){
@@ -57,8 +56,16 @@ public class MyDataBase extends SQLiteOpenHelper {
     }
 
     public Cursor fetchAllData(){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(fetch, null);
+      //  SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+      //  Cursor cursor = sqLiteDatabase.rawQuery(fetch, null);
+      //  return cursor;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (sqLiteDatabase != null){
+            cursor = sqLiteDatabase.rawQuery(fetch_query, null);
+        }
+
         return cursor;
     }
 
@@ -83,5 +90,47 @@ public class MyDataBase extends SQLiteOpenHelper {
                 Toast.makeText(context, "Added Successfully!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    void updateData(String contact_id, String f_name, String l_name, String phone_no, String email){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        if(f_name.isEmpty() == true){
+            Toast.makeText(context, "Please Enter A Name.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            ContentValues cv = new ContentValues();
+            cv.put(F_NAME, f_name);
+            cv.put(L_NAME, l_name);
+            cv.put(PHONE_NO, phone_no);
+            cv.put(EMAIL, email);
+
+
+            long result = sqLiteDatabase.update(TABLE_NAME, cv, ID + "=?", new String[]{contact_id});
+
+            if(result == -1){
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    void deleteOneRow(String contact_id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long result = sqLiteDatabase.delete(TABLE_NAME, ID +" =?", new String[]{contact_id});
+        if(result == -1){
+            Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void deleteAllContact(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DELETE FROM " + TABLE_NAME);
     }
 }
