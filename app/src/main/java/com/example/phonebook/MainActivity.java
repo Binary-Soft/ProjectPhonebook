@@ -24,13 +24,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton add_button;
-    ImageView empty_imageview;
-    TextView no_data;
     MyDataBase myDataBase;
     ArrayList <String> ID, F_name, L_name, Phone_No, Email, Favourite;
     RecyclerView recyclerView;
-    ListView listView;
-
     CustomAdapter customAdapter;
 
 
@@ -46,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
                 startActivity(intent);
+
             }
         });
-
 
         myDataBase = new MyDataBase(this);
         ID = new ArrayList<>();
@@ -63,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         customAdapter = new CustomAdapter(MainActivity.this,this, ID, F_name, L_name,
                 Phone_No, Email);
 
-
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -71,25 +66,28 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-/*
+        /*                   // ===============>>           For Testing
         SQLiteDatabase sqLiteDatabase = myDataBase.getWritableDatabase();
 
         Cursor cursor = myDataBase.fetchAllData();
         if(cursor.getCount() == 0){
-            ShowData("Error : ", "No Data Found");
+            ShowData("Details: ", "Empty Contact List!");
         }
-        StringBuffer stringBuffer = new StringBuffer();
-        while(cursor.moveToNext()){
-            stringBuffer.append("ID : "+ cursor.getString(0)+ "\n");
-            stringBuffer.append("F_Name : "+ cursor.getString(1)+ "\n");
-            stringBuffer.append("L_Name : "+ cursor.getString(2)+ "\n");
-            stringBuffer.append("Email : "+ cursor.getString(3)+ "\n");
-            stringBuffer.append("Phone : "+ cursor.getString(4)+ "\n\n\n");
-        }
-        ShowData("Contact Info..", stringBuffer.toString());*/
+        else{
+            StringBuffer stringBuffer = new StringBuffer();
+            while(cursor.moveToNext()){
+                stringBuffer.append("ID : "+ cursor.getString(0)+ "\n");
+                stringBuffer.append("F_Name : "+ cursor.getString(1)+ "\n");
+                stringBuffer.append("L_Name : "+ cursor.getString(2)+ "\n");
+                stringBuffer.append("Email : "+ cursor.getString(3)+ "\n");
+                stringBuffer.append("Phone : "+ cursor.getString(4)+ "\n\n\n");
+            }
+            ShowData("Contact List.", stringBuffer.toString());
+        }*/
+
     }
 
-/*
+    /*             //   ===========>>         For Testing
     public void ShowData(String title, String contactlist){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
@@ -103,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = myDataBase.fetchAllData();
 
         if(cursor.getCount() == 0){
-          //  empty_imageview.setVisibility(View.VISIBLE);
-         //   no_data.setVisibility(View.VISIBLE);
             Toast.makeText(this, "No Data!", Toast.LENGTH_SHORT).show();
         }
         else{
@@ -114,17 +110,16 @@ public class MainActivity extends AppCompatActivity {
                 L_name.add(cursor.getString(2));
                 Email.add(cursor.getString(3));
                 Phone_No.add(cursor.getString(4));
-             //   Favourite.add(cursor.getString(5));
-
+             //   Favourite.add(cursor.getString(5));  // For future work
             }
-         //   empty_imageview.setVisibility(View.GONE);
-        //    no_data.setVisibility(View.GONE);
         }
     }
 
-
-
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            recreate();
+        }
+    }
 }

@@ -11,8 +11,8 @@ import android.widget.EditText;
 
 public class AddContactActivity extends AppCompatActivity {
 
-    EditText f_name_input, l_name_input, phone_no_input, email_input;
     Button add_button;
+    EditText f_name_input, l_name_input, phone_no_input, email_input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,8 @@ public class AddContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MyDataBase myDataBase = new MyDataBase(AddContactActivity.this);
-                myDataBase.addcontact(f_name_input.getText().toString().trim(),
-                        l_name_input.getText().toString().trim(),
-                        phone_no_input.getText().toString().trim(),
-                        email_input.getText().toString().trim());
+                myDataBase.addcontact(f_name_input.getText().toString().trim(), l_name_input.getText().toString().trim(),
+                        phone_no_input.getText().toString().trim(), email_input.getText().toString().trim());
             }
         });
     }

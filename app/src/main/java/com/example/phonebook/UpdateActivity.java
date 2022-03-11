@@ -48,7 +48,8 @@ public class UpdateActivity extends AppCompatActivity {
         update_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //And only then we call this
+
+
                 MyDataBase myDataBase = new MyDataBase(UpdateActivity.this);
                 f_name = f_name_input.getText().toString().trim();
                 l_name = l_name_input.getText().toString().trim();
@@ -64,7 +65,6 @@ public class UpdateActivity extends AppCompatActivity {
                 confirmDialog();
             }
         });
-
     }
 
     void getAndSetIntentData(){
@@ -84,7 +84,7 @@ public class UpdateActivity extends AppCompatActivity {
             phone_no_input.setText(phone_no);
             email_input.setText(email);
 
-            Log.d("PD", f_name+" "+l_name+" "+phone_no);
+          //  Log.d("PD", f_name+" "+l_name+" "+phone_no);
         }
         else{
             Toast.makeText(this, "No data.", Toast.LENGTH_SHORT).show();
@@ -93,22 +93,20 @@ public class UpdateActivity extends AppCompatActivity {
 
     void confirmDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete " + f_name + "  " + l_name + " ?");
+        builder.setTitle("Delete " + f_name + "  " + l_name + "!");
         builder.setMessage("Are you sure you want to delete " + f_name + "  " + l_name + " ?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 MyDataBase myDataBase = new MyDataBase(UpdateActivity.this);
-                myDataBase.deleteOneRow(id);
+                myDataBase.deleteAContact(id);
                 finish();
-                // ..............
             }
         });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
             }
         });
         builder.create().show();
